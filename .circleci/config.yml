@@ -47,6 +47,6 @@ jobs:
     machine: true
     steps:
       
-      - run: docker pull chandrarai/cir_chandra:$CIRCLE_SHA1
+      - run: docker pull nguragain/flask-app-repo:$CIRCLE_SHA1
 
-      - run: docker run -p 8888:5000 --name cir_chandra chandrarai/cir_chandra:$CIRCLE_SHA
+      - run: docker run -p 8888:5000 --name flask-app-repo nguragain/flask-app-repo:$CIRCLE_SHA1
