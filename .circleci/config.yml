@@ -35,13 +35,13 @@ jobs:
     steps:
       - checkout
       # Login to docker
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker login -u $DOCKERHUBUSERNAME -p $DOCKERPASS
 
       # build the application image
-      - run: docker build -t $DOCKER_USER/cir_chandra:$CIRCLE_SHA1 .
+      - run: docker build -t $DOCKERHUBUSERNAME/flask-app-repo:$CIRCLE_SHA1 .
 
       # deploy the image
-      - run: docker push $DOCKER_USER/cir_chandra:$CIRCLE_SHA1
+      - run: docker push $DOCKERHUBUSERNAME/flask-app-repo:$CIRCLE_SHA1
    
   deploy:
     machine: true
