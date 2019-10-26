@@ -46,10 +46,7 @@ jobs:
   deploy:
     machine: true
     steps:
-      - add_ssh_keys:
-           fingerprints:
-             - "86:56:0c:6c:45:0a:d0:af:01:c1:4d:0e:5f:3a:91:76"
-
+      
       - run: docker pull chandrarai/cir_chandra:$CIRCLE_SHA1
 
-      - run: docker run -p 8888:5000 --name cir_chandra chandrarai/cir_chandra:$CIRCLE_SHA1
+      - run: docker run -p 8888:5000 --name cir_chandra chandrarai/cir_chandra:$CIRCLE_SHA
