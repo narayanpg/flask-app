@@ -1,0 +1,55 @@
+workflows:
+  version: 2
+  test_build:
+      jobs:
+        - test
+        - dockerize:
+            requires:
+              - test
+        - deploy:
+            requires:
+              - dockerize
+
+jobs:
+  test:
+    docker:  
+      # docker:
+      # specify the version you desire here
+      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
+      - image: chandrarai/pythonapp:latest
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    steps:
+      - checkout
+
+             
+      - store_artifacts:
+           path: .
+           destination: test_output
+             
+  dockerize:
+    machine: true
+    steps:
+      - checkout
+      # Login to docker
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+      # build the application image
+      - run: docker build -t $DOCKER_USER/cir_chandra:$CIRCLE_SHA1 .
+
+      # deploy the image
+      - run: docker push $DOCKER_USER/cir_chandra:$CIRCLE_SHA1
+   
+  deploy:
+    machine: true
+    steps:
+      - add_ssh_keys:
+           fingerprints:
+             - "86:56:0c:6c:45:0a:d0:af:01:c1:4d:0e:5f:3a:91:76"
+
+      - run: docker pull chandrarai/cir_chandra:$CIRCLE_SHA1
+
+      - run: docker run -p 8888:5000 --name cir_chandra chandrarai/cir_chandra:$CIRCLE_SHA1
